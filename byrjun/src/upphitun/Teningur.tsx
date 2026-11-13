@@ -12,11 +12,15 @@ const hlidar = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
 
 function Teningur() {
   // TODO 1: Búðu til number state fyrir töluna, byrjar t.d. í 1.
+  const [tala, setTala] = useState(1);
+  // AUKA: fjöldi kasta
+  const [kost, setKost] = useState(0);
 
   // TODO 2: Skrifaðu fall sem kastar teningnum og vistar nýju töluna með set-fallinu.
   //         Slembitala 1–6: Math.floor(Math.random() * 6) + 1
   function kasta() {
-    // ...
+    setTala(Math.floor(Math.random() * 6) + 1);
+    setKost((k) => k + 1);
   }
 
   return (
@@ -24,14 +28,16 @@ function Teningur() {
       <h3>🎲 Teningur</h3>
 
       {/* TODO 3: Sýndu rétta hlið í stað ⚀. Vísbending: hlidar[tala - 1] */}
-      <p className="teningur-andlit">⚀</p>
+      <p className="teningur-andlit">{hlidar[tala - 1]}</p>
 
       {/* TODO 4: Tengdu takkann við kasta-fallið. */}
-      <button>Kasta</button>
+      <button onClick={kasta}>Kasta</button>
 
       {/* TODO 5: Sýndu <p className="sexa">SEXA! 🎉</p> BARA ef talan er 6 (notið &&). */}
+      {tala === 6 && <p className="sexa">SEXA! 🎉</p>}
 
       {/* AUKA: Teljið hversu oft hefur verið kastað: „Köst: 7“ */}
+      <p>Köst: {kost}</p>
     </div>
   );
 }
