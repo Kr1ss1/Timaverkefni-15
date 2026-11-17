@@ -2,15 +2,15 @@
 // Fyrir þau sem klára snemma. Allt sem þarf höfum við lært í kvöld.
 //
 // Kröfur:
-//   [ ] Leynitala frá 1 til 100 er valin í byrjun.
-//   [ ] Input-reitur og takki „Giska“.
-//   [ ] Skilaboð: „Of hátt ⬇️“, „Of lágt ⬆️“ eða „Rétt! 🎉“
-//   [ ] Teljari: „Tilraunir: 4“
-//   [ ] „Spila aftur“ birtist aðeins þegar rétt er giskað (&&).
+//   [x] Leynitala frá 1 til 100 er valin í byrjun.
+//   [x] Input-reitur og takki „Giska“.
+//   [x] Skilaboð: „Of hátt ⬇️“, „Of lágt ⬆️“ eða „Rétt! 🎉“
+//   [x] Teljari: „Tilraunir: 4“
+//   [x] „Spila aftur“ birtist aðeins þegar rétt er giskað (&&).
 //
 // Auka-áskorun 🔥
-//   [ ] Skilaboðin skipta um lit: rautt (of hátt), blátt (of lágt), grænt (rétt).
-//   [ ] Geymið metið – fæstar tilraunir.
+//   [x] Skilaboðin skipta um lit: rautt (of hátt), blátt (of lágt), grænt (rétt).
+//   [x] Geymið metið – fæstar tilraunir.
 
 import { useState } from "react";
 
@@ -18,38 +18,69 @@ function nyLeynitala() {
   return Math.floor(Math.random() * 100) + 1;
 }
 
+const RETT = "Rétt! 🎉";
+const OF_HATT = "Of hátt ⬇️";
+const OF_LAGT = "Of lágt ⬆️";
+
 function GiskaLeikur() {
-  // TODO 1: State fyrir leynitöluna:   useState(nyLeynitala())
-  // TODO 2: State fyrir það sem er skrifað í reitinn (string)
-  // TODO 3: State fyrir skilaboðin (string, byrjar "")
-  // TODO 4: State fyrir fjölda tilrauna (number)
+  const [leynitala, setLeynitala] = useState(nyLeynitala());
+  const [agiskun, setAgiskun] = useState("");
+  const [skilabod, setSkilabod] = useState("");
+  const [tilraunir, setTilraunir] = useState(0);
+  // AUKA: met (fæstar tilraunir), null þar til fyrsti leikur klárast
+  const [met, setMet] = useState<number | null>(null);
+
+  const rett = skilabod === RETT;
 
   function giska() {
-    // TODO 5: Breyttu textanum úr reitnum í tölu.
-    //         ⚠ Input skilar alltaf texta! Number("42") gefur töluna 42.
-    // TODO 6: Hækkaðu tilraunateljarann um 1.
-    // TODO 7: Berðu saman við leynitöluna og settu rétt skilaboð.
-    //         Hægt að nota if/else – eða tvöfaldan ternary ef þið eruð hugrökk.
+    if (rett || agiskun.trim() === "") return;
+
+    const tala = Number(agiskun);
+    const nyjarTilraunir = tilraunir + 1;
+    setTilraunir(nyjarTilraunir);
+
+    if (tala > leynitala) {
+      setSkilabod(OF_HATT);
+    } else if (tala < leynitala) {
+      setSkilabod(OF_LAGT);
+    } else {
+      setSkilabod(RETT);
+      if (met === null || nyjarTilraunir < met) {
+        setMet(nyjarTilraunir);
+      }
+    }
   }
 
   function spilaAftur() {
-    // TODO 8: Ný leynitala, tómur reitur, engin skilaboð, 0 tilraunir.
+    setLeynitala(nyLeynitala());
+    setAgiskun("");
+    setSkilabod("");
+    setTilraunir(0);
   }
+
+  const litur = rett ? "#16a34a" : skilabod === OF_HATT ? "#c0392b" : "#2563eb";
 
   return (
     <div className="card leikur">
       <p className="muted">Ég er að hugsa um tölu frá 1 til 100…</p>
 
       <div className="row">
-        {/* TODO: Tengdu reitinn við state (value + onChange). */}
-        <input type="number" placeholder="Þín ágiskun" />
-        {/* TODO: Tengdu takkann við giska(). */}
-        <button>Giska</button>
+        <input
+          type="number"
+          placeholder="Þín ágiskun"
+          value={agiskun}
+          onChange={(e) => setAgiskun(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && giska()}
+        />
+        <button onClick={giska} disabled={rett}>
+          Giska
+        </button>
       </div>
 
-      {/* TODO: Sýndu skilaboðin, bara ef það eru einhver skilaboð. */}
-      {/* TODO: Sýndu „Tilraunir: X“ */}
-      {/* TODO: Sýndu „Spila aftur“-takkann BARA ef rétt var giskað. */}
+      {skilabod !== "" && <p style={{ color: litur, fontWeight: "bold" }}>{skilabod}</p>}
+      <p>Tilraunir: {tilraunir}</p>
+      {met !== null && <p className="muted">Met: {met} tilraunir</p>}
+      {rett && <button onClick={spilaAftur}>Spila aftur</button>}
     </div>
   );
 }
