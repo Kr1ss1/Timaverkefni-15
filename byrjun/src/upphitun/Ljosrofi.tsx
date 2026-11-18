@@ -20,9 +20,11 @@ function Ljosrofi() {
       //         Vísbending: style={{ background: on ? "..." : "..." }}
       //         Ath: tvöföldu slaufusvigarnir {{ }} = JavaScript-hlutur inni í JSX.
       style={{ background: on ? "#fff6c2" : "#1f2937", color: on ? "#1f2937" : "#f9fafb" }}
-
     >
-      <p className="pera">💡</p>
+      {/* AUKA: Peran er dauf þegar slökkt er */}
+      <p className="pera" style={{ opacity: on ? 1 : 0.3 }}>
+        💡
+      </p>
 
       {/* TODO 3: Takkinn á að snúa state við þegar smellt er.
                   Vísbending: onClick={() => setOn(!on)} */}
@@ -31,10 +33,6 @@ function Ljosrofi() {
       </button>
 
       {/* TODO 4: Textinn á takkanum á að vera „Slökkva“ ef kveikt, annars „Kveikja“. */}
-      {/* AUKA: Láttu peruna vera daufa þegar slökkt er: style={{ opacity: on ? 1 : 0.3 }} */}
-      <p className="pera" style={{ opacity: on ? 1 : 0.3 }}>
-        💡
-      </p>
     </div>
   );
 }
